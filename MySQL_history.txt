@@ -1,0 +1,196 @@
+mysql> CREATE DATABASE `Human Friends`;
+Query OK, 1 row affected (0,02 sec)
+
+mysql> CREATE DATABASE ‘HumanFriends’;
+Query OK, 1 row affected (0,01 sec)
+
+mysql> DROP DATABASE `Human Friends`;
+Query OK, 0 rows affected (0,02 sec)
+
+mysql> USE ‘HumanFriends’;
+Database changed
+mysql> CREATE TABLE Животные (
+    ->     ID INT AUTO_INCREMENT PRIMARY KEY,
+    ->     Тип VARCHAR(50),
+    ->     Имя VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0,04 sec)
+
+mysql> CREATE TABLE Собаки (
+    ->     ЖивотноеID INT,
+    ->     Команды VARCHAR(255),
+    ->     ДатаРождения DATE,
+    ->     FOREIGN KEY (ЖивотноеID) REFERENCES Животные(ID)
+    -> );
+Query OK, 0 rows affected (0,05 sec)
+
+mysql> 
+mysql> CREATE TABLE Кошки (
+    ->     ЖивотноеID INT,
+    ->     Команды VARCHAR(255),
+    ->     ДатаРождения DATE,
+    ->     FOREIGN KEY (ЖивотноеID) REFERENCES Животные(ID)
+    -> );
+Query OK, 0 rows affected (0,01 sec)
+
+mysql> 
+mysql> CREATE TABLE Хомяки (
+    ->     ЖивотноеID INT,
+    ->     Команды VARCHAR(255),
+    ->     ДатаРождения DATE,
+    ->     FOREIGN KEY (ЖивотноеID) REFERENCES Животные(ID)
+    -> );
+Query OK, 0 rows affected (0,02 sec)
+
+mysql> CREATE TABLE Лошади (
+    ->     ЖивотноеID INT,
+    ->     Команды VARCHAR(255),
+    ->     ДатаРождения DATE,
+    ->     FOREIGN KEY (ЖивотноеID) REFERENCES Животные(ID)
+    -> );
+Query OK, 0 rows affected (0,06 sec)
+
+mysql> 
+mysql> CREATE TABLE Верблюды (
+    ->     ЖивотноеID INT,
+    ->     Команды VARCHAR(255),
+    ->     ДатаРождения DATE,
+    ->     FOREIGN KEY (ЖивотноеID) REFERENCES Животные(ID)
+    -> );
+Query OK, 0 rows affected (0,01 sec)
+
+mysql> 
+mysql> CREATE TABLE Ослы (
+    ->     ЖивотноеID INT,
+    ->     Команды VARCHAR(255),
+    ->     ДатаРождения DATE,
+    ->     FOREIGN KEY (ЖивотноеID) REFERENCES Животные(ID)
+    -> );
+Query OK, 0 rows affected (0,01 sec)
+
+mysql> -- Добавляем домашние животные в таблицу Животные
+mysql> INSERT INTO Животные (Тип, Имя) VALUES ('Домашнее', 'Бобик'), ('Домашнее', 'Мурка'), ('Домашнее', 'Хомка');
+Query OK, 3 rows affected (0,02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> -- Добавляем вьючные животные в таблицу Животные
+mysql> INSERT INTO Животные (Тип, Имя) VALUES ('Вьючное', 'Лошадка'), ('Вьючное', 'Верблюдик'), ('Вьючное', 'Ослик');
+Query OK, 3 rows affected (0,01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> -- Предполагаем, что ID животных, которые мы только что добавили, начинаются с 1
+mysql> -- Заполнение таблицы Собаки
+mysql> INSERT INTO Собаки (ЖивотноеID, Команды, ДатаРождения) VALUES (1, 'Сидеть, лежать, апорт', '2020-01-01');
+Query OK, 1 row affected (0,00 sec)
+
+mysql> 
+mysql> -- Заполнение таблицы Кошки
+mysql> INSERT INTO Кошки (ЖивотноеID, Команды, ДатаРождения) VALUES (2, 'Игнорировать, мурлыкать', '2019-02-02');
+Query OK, 1 row affected (0,00 sec)
+
+mysql> 
+mysql> -- Заполнение таблицы Хомяки
+mysql> INSERT INTO Хомяки (ЖивотноеID, Команды, ДатаРождения) VALUES (3, 'Крутить колесо', '2021-03-03');
+Query OK, 1 row affected (0,00 sec)
+
+mysql> 
+mysql> -- Заполнение таблицы Лошади
+mysql> INSERT INTO Лошади (ЖивотноеID, Команды, ДатаРождения) VALUES (4, 'Трусца, галоп', '2018-04-04');
+Query OK, 1 row affected (0,01 sec)
+
+mysql> 
+mysql> -- Заполнение таблицы Верблюды
+mysql> INSERT INTO Верблюды (ЖивотноеID, Команды, ДатаРождения) VALUES (5, 'Выносливость, носить грузы', '2017-05-05');
+Query OK, 1 row affected (0,00 sec)
+
+mysql> 
+mysql> -- Заполнение таблицы Ослы
+mysql> INSERT INTO Ослы (ЖивотноеID, Команды, ДатаРождения) VALUES (6, 'Переносить грузы', '2016-06-06');
+Query OK, 1 row affected (0,00 sec)
+
+mysql> SELECT ID FROM Животные WHERE Имя = 'Верблюдик';
++----+
+| ID |
++----+
+|  5 |
++----+
+1 row in set (0,00 sec)
+
+mysql> DELETE FROM Верблюды WHERE ЖивотноеID = 5;
+Query OK, 1 row affected (0,01 sec)
+
+mysql> DELETE FROM Животные WHERE ID = 5;
+Query OK, 1 row affected (0,02 sec)
+
+mysql> CREATE TABLE Молодые_животные (
+    ->     ID INT AUTO_INCREMENT PRIMARY KEY,
+    ->     ЖивотноеID INT,
+    ->     Вид VARCHAR(100),
+    ->     Имя VARCHAR(100),
+    ->     Возраст VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0,04 sec)
+
+mysql> INSERT INTO Молодые_животные (ЖивотноеID, Вид, Имя, Возраст)
+    -> SELECT Животные.ID, 'Собака', Животные.Имя, TIMESTAMPDIFF(MONTH, Собаки.ДатаРождения, CURDATE()) AS ВозрастМесяцев
+    -> FROM Собаки
+    -> JOIN Животные ON Собаки.ЖивотноеID = Животные.ID
+    -> WHERE TIMESTAMPDIFF(YEAR, Собаки.ДатаРождения, CURDATE()) BETWEEN 1 AND 2;
+Query OK, 0 rows affected (0,00 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Молодые_животные (ЖивотноеID, Вид, Имя, Возраст)
+    -> SELECT Животные.ID, 'Кошки', Животные.Имя, TIMESTAMPDIFF(MONTH, Кошки.ДатаРождения, CURDATE()) AS ВозрастМесяцев
+    -> FROM Кошки
+    -> JOIN Животные ON Кошки.ЖивотноеID = Животные.ID
+    -> WHERE TIMESTAMPDIFF(YEAR, Кошки.ДатаРождения, CURDATE()) BETWEEN 1 AND 2;
+Query OK, 0 rows affected (0,00 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Молодые_животные (ЖивотноеID, Вид, Имя, Возраст)
+    -> SELECT Животные.ID, 'Хомяки', Животные.Имя, TIMESTAMPDIFF(MONTH, Хомяки.ДатаРождения, CURDATE()) AS ВозрастМесяцев
+    -> FROM Хомяки
+    -> JOIN Животные ON Хомяки.ЖивотноеID = Животные.ID
+    -> WHERE TIMESTAMPDIFF(YEAR, Хомяки.ДатаРождения, CURDATE()) BETWEEN 1 AND 2;
+Query OK, 0 rows affected (0,00 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Молодые_животные (ЖивотноеID, Вид, Имя, Возраст)
+    -> SELECT Животные.ID, 'Лошади', Животные.Имя, TIMESTAMPDIFF(MONTH, Лошади.ДатаРождения, CURDATE()) AS ВозрастМесяцев
+    -> FROM Лошади
+    -> JOIN Животные ON Лошади.ЖивотноеID = Животные.ID
+    -> WHERE TIMESTAMPDIFF(YEAR, Лошади.ДатаРождения, CURDATE()) BETWEEN 1 AND 2;
+Query OK, 0 rows affected (0,00 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Молодые_животные (ЖивотноеID, Вид, Имя, Возраст)
+    -> SELECT Животные.ID, 'Ослы', Животные.Имя, TIMESTAMPDIFF(MONTH, Ослы.ДатаРождения, CURDATE()) AS ВозрастМесяцев
+    -> FROM Ослы
+    -> JOIN Животные ON Ослы.ЖивотноеID = Животные.ID
+    -> WHERE TIMESTAMPDIFF(YEAR, Ослы.ДатаРождения, CURDATE()) BETWEEN 1 AND 2;
+Query OK, 0 rows affected (0,00 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Объединенная_таблица (
+    ->     ID INT AUTO_INCREMENT PRIMARY KEY,
+    ->     ЖивотноеID INT,
+    ->     Вид VARCHAR(100),
+    ->     Имя VARCHAR(100),
+    ->     Команды VARCHAR(255),
+    ->     ДатаРождения DATE,
+    ->     Возраст VARCHAR(100),
+    ->     Принадлежность VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0,05 sec)
+
+mysql> -- Для молодых животных
+mysql> INSERT INTO Объединенная_таблица (ЖивотноеID, Вид, Имя, Возраст, Принадлежность)
+    -> SELECT ЖивотноеID, Вид, Имя, Возраст, 'Молодые животные'
+    -> FROM Молодые_животные;
+Query OK, 0 rows affected (0,00 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> exit
+Bye
