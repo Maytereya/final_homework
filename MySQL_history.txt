@@ -1,13 +1,7 @@
-mysql> CREATE DATABASE `Human Friends`;
-Query OK, 1 row affected (0,02 sec)
-
-mysql> CREATE DATABASE ‘HumanFriends’;
+mysql> CREATE DATABASE HumanFriends;
 Query OK, 1 row affected (0,01 sec)
 
-mysql> DROP DATABASE `Human Friends`;
-Query OK, 0 rows affected (0,02 sec)
-
-mysql> USE ‘HumanFriends’;
+mysql> USE HumanFriends;
 Database changed
 mysql> CREATE TABLE Животные (
     ->     ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -33,7 +27,6 @@ mysql> CREATE TABLE Кошки (
     -> );
 Query OK, 0 rows affected (0,01 sec)
 
-mysql> 
 mysql> CREATE TABLE Хомяки (
     ->     ЖивотноеID INT,
     ->     Команды VARCHAR(255),
@@ -95,6 +88,18 @@ mysql> -- Заполнение таблицы Хомяки
 mysql> INSERT INTO Хомяки (ЖивотноеID, Команды, ДатаРождения) VALUES (3, 'Крутить колесо', '2021-03-03');
 Query OK, 1 row affected (0,00 sec)
 
+mysql> INSERT INTO Хомяки (ЖивотноеID, Команды, ДатаРождения) VALUES (3, 'Спать', '2023-03-03');
+Query OK, 1 row affected (0,01 sec)
+
+mysql> SELECT * FROM Хомяки;
++--------------------+-----------------------------+--------------------------+
+| ЖивотноеID         | Команды                     | ДатаРождения             |
++--------------------+-----------------------------+--------------------------+
+|                  3 | Крутить колесо              | 2021-03-03               |
+|                  3 | Спать                       | 2023-03-03               |
++--------------------+-----------------------------+--------------------------+
+2 rows in set (0,00 sec)
+
 mysql> 
 mysql> -- Заполнение таблицы Лошади
 mysql> INSERT INTO Лошади (ЖивотноеID, Команды, ДатаРождения) VALUES (4, 'Трусца, галоп', '2018-04-04');
@@ -124,6 +129,24 @@ Query OK, 1 row affected (0,01 sec)
 mysql> DELETE FROM Животные WHERE ID = 5;
 Query OK, 1 row affected (0,02 sec)
 
+mysql> DROP TABLE Верблюды;
+Query OK, 0 rows affected (0,03 sec)
+
+mysql> SHOW TABLES;
++-----------------------------------------+
+| Tables_in_HumanFriends                  |
++-----------------------------------------+
+| Животные                                |
+| Кошки                                   |
+| Лошади                                  |
+| Молодые_животные                        |
+| Объединенная_таблица                    |
+| Ослы                                    |
+| Собаки                                  |
+| Хомяки                                  |
++-----------------------------------------+
+8 rows in set (0,00 sec)
+
 mysql> CREATE TABLE Молодые_животные (
     ->     ID INT AUTO_INCREMENT PRIMARY KEY,
     ->     ЖивотноеID INT,
@@ -133,45 +156,24 @@ mysql> CREATE TABLE Молодые_животные (
     -> );
 Query OK, 0 rows affected (0,04 sec)
 
-mysql> INSERT INTO Молодые_животные (ЖивотноеID, Вид, Имя, Возраст)
-    -> SELECT Животные.ID, 'Собака', Животные.Имя, TIMESTAMPDIFF(MONTH, Собаки.ДатаРождения, CURDATE()) AS ВозрастМесяцев
-    -> FROM Собаки
-    -> JOIN Животные ON Собаки.ЖивотноеID = Животные.ID
-    -> WHERE TIMESTAMPDIFF(YEAR, Собаки.ДатаРождения, CURDATE()) BETWEEN 1 AND 2;
-Query OK, 0 rows affected (0,00 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+-- Для простоты взял только хомяка, подходящего в возрастной диапазон.
 
 mysql> INSERT INTO Молодые_животные (ЖивотноеID, Вид, Имя, Возраст)
-    -> SELECT Животные.ID, 'Кошки', Животные.Имя, TIMESTAMPDIFF(MONTH, Кошки.ДатаРождения, CURDATE()) AS ВозрастМесяцев
-    -> FROM Кошки
-    -> JOIN Животные ON Кошки.ЖивотноеID = Животные.ID
-    -> WHERE TIMESTAMPDIFF(YEAR, Кошки.ДатаРождения, CURDATE()) BETWEEN 1 AND 2;
-Query OK, 0 rows affected (0,00 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-
-mysql> INSERT INTO Молодые_животные (ЖивотноеID, Вид, Имя, Возраст)
-    -> SELECT Животные.ID, 'Хомяки', Животные.Имя, TIMESTAMPDIFF(MONTH, Хомяки.ДатаРождения, CURDATE()) AS ВозрастМесяцев
+    -> SELECT Животные.ID, 'Хомяк', Животные.Имя, TIMESTAMPDIFF(MONTH, Хомяки.ДатаРождения, CURDATE()) AS ВозрастМесяцев
     -> FROM Хомяки
     -> JOIN Животные ON Хомяки.ЖивотноеID = Животные.ID
     -> WHERE TIMESTAMPDIFF(YEAR, Хомяки.ДатаРождения, CURDATE()) BETWEEN 1 AND 2;
-Query OK, 0 rows affected (0,00 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+Query OK, 1 row affected (0,01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
 
-mysql> INSERT INTO Молодые_животные (ЖивотноеID, Вид, Имя, Возраст)
-    -> SELECT Животные.ID, 'Лошади', Животные.Имя, TIMESTAMPDIFF(MONTH, Лошади.ДатаРождения, CURDATE()) AS ВозрастМесяцев
-    -> FROM Лошади
-    -> JOIN Животные ON Лошади.ЖивотноеID = Животные.ID
-    -> WHERE TIMESTAMPDIFF(YEAR, Лошади.ДатаРождения, CURDATE()) BETWEEN 1 AND 2;
-Query OK, 0 rows affected (0,00 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+mysql>  SELECT * FROM Молодые_животные;
++----+--------------------+------------+------------+----------------+
+| ID | ЖивотноеID         | Вид        | Имя        | Возраст        |
++----+--------------------+------------+------------+----------------+
+|  1 |                  3 | Хомяк      | Хомка      | 12             |
++----+--------------------+------------+------------+----------------+
+1 row in set (0,00 sec)
 
-mysql> INSERT INTO Молодые_животные (ЖивотноеID, Вид, Имя, Возраст)
-    -> SELECT Животные.ID, 'Ослы', Животные.Имя, TIMESTAMPDIFF(MONTH, Ослы.ДатаРождения, CURDATE()) AS ВозрастМесяцев
-    -> FROM Ослы
-    -> JOIN Животные ON Ослы.ЖивотноеID = Животные.ID
-    -> WHERE TIMESTAMPDIFF(YEAR, Ослы.ДатаРождения, CURDATE()) BETWEEN 1 AND 2;
-Query OK, 0 rows affected (0,00 sec)
-Records: 0  Duplicates: 0  Warnings: 0
 
 mysql> CREATE TABLE Объединенная_таблица (
     ->     ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -189,8 +191,16 @@ mysql> -- Для молодых животных
 mysql> INSERT INTO Объединенная_таблица (ЖивотноеID, Вид, Имя, Возраст, Принадлежность)
     -> SELECT ЖивотноеID, Вид, Имя, Возраст, 'Молодые животные'
     -> FROM Молодые_животные;
-Query OK, 0 rows affected (0,00 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+Query OK, 1 row affected (0,01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Молодые_животные;
++----+--------------------+------------+------------+----------------+
+| ID | ЖивотноеID         | Вид        | Имя        | Возраст        |
++----+--------------------+------------+------------+----------------+
+|  1 |                  3 | Хомяк      | Хомка      | 12             |
++----+--------------------+------------+------------+----------------+
+1 row in set (0,00 sec)
 
 mysql> exit
 Bye
