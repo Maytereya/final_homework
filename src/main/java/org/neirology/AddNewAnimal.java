@@ -30,7 +30,7 @@ public class AddNewAnimal {
                 ageOfAnimal = Integer.parseInt(scanner.nextLine());
 
             } catch (NumberFormatException e) {
-                System.out.println("Введенные данные не являются целым числом. Пожалуйста, попробуйте снова.");
+                System.out.println("Inputted data is incorrect, use integers. Try again.");
                 System.out.print("Input its age: ");
             }
         }

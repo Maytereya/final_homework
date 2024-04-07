@@ -10,7 +10,7 @@ public class ShowAllAnimals {
     public void showAllAnimals(ArrayList<Animals> animalsList) {
 
         System.out.println();
-        System.out.println("+++++++ Журнал домашних животных +++++++");
+        System.out.println("++++++++++ All my animals list +++++++++++++");
         for (Animals animals : animalsList) {
             System.out.println(animals);
         }
